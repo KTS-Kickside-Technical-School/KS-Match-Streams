@@ -1,0 +1,151 @@
+{
+    "brand": {
+        "name": "RindaNet",
+        "tagline": "Secure. Fast. Borderless."
+    },
+    "nav": {
+        "features": "Features",
+        "map": "Network",
+        "pricing": "Pricing",
+        "faq": "FAQ",
+        "download": "Download App",
+        "getStarted": "Get Started"
+    },
+    "hero": {
+        "headline": "Secure Internet Without Borders",
+        "subtext": "RindaNet delivers ultra-fast encrypted connections designed for privacy, freedom, and global access.",
+        "download": "Download App",
+        "getStarted": "Get Started",
+        "statusTitle": "Live Connection",
+        "status": "Connected",
+        "server": "Shanghai to Singapore",
+        "latency": "Latency",
+        "speed": "Speed",
+        "shield": "AES-256 Tunnel Active"
+    },
+    "trust": {
+        "title": "Trusted by privacy-first teams worldwide",
+        "items": {
+            "encryption": {
+                "title": "Military-Grade Encryption",
+                "desc": "AES-256 encryption with modern key rotation to protect every packet."
+            },
+            "servers": {
+                "title": "Global High-Speed Servers",
+                "desc": "Strategically placed gateways for low latency across major regions."
+            },
+            "nologs": {
+                "title": "Strict No-Logs Policy",
+                "desc": "Zero activity tracking and privacy-first infrastructure design."
+            },
+            "performance": {
+                "title": "Optimized Throughput",
+                "desc": "Engineered routing keeps traffic stable during peak hours."
+            }
+        }
+    },
+    "features": {
+        "title": "Built for speed, security, and freedom",
+        "items": {
+            "fast": "Fast Connections",
+            "kill": "Kill Switch",
+            "multi": "Multi-Device Support",
+            "routing": "Smart Routing",
+            "china": "China Optimized Servers",
+            "streaming": "Streaming Support"
+        }
+    },
+    "map": {
+        "title": "Global VPN Fabric",
+        "desc": "A resilient low-latency network bridging China and international routes.",
+        "online": "Nodes Online",
+        "uptime": "Uptime"
+    },
+    "how": {
+        "title": "How it works",
+        "step1": {
+            "title": "Download",
+            "desc": "Install RindaNet on your preferred device in seconds."
+        },
+        "step2": {
+            "title": "Connect",
+            "desc": "Pick the fastest smart location or choose manually."
+        },
+        "step3": {
+            "title": "Browse Securely",
+            "desc": "Your traffic is encrypted and routed through trusted gateways."
+        }
+    },
+    "platforms": {
+        "title": "Available on every major platform"
+    },
+    "testimonials": {
+        "title": "What teams say",
+        "items": {
+            "one": {
+                "quote": "RindaNet gave our distributed team stable cross-border connectivity without sacrificing speed.",
+                "name": "Lina Zhao",
+                "role": "CTO, Nova Commerce"
+            },
+            "two": {
+                "quote": "The management dashboard and policy controls made enterprise rollout effortless.",
+                "name": "Marcus Rey",
+                "role": "Security Lead, Apex Studio"
+            },
+            "three": {
+                "quote": "Consistent streaming and lower latency than our previous provider in APAC.",
+                "name": "Sophie Martin",
+                "role": "Ops Director, Flux Media"
+            }
+        }
+    },
+    "pricing": {
+        "title": "Simple pricing for modern teams",
+        "monthly": "month",
+        "starter": {
+            "name": "Starter",
+            "price": "$8",
+            "desc": "For individuals and solo professionals"
+        },
+        "pro": {
+            "name": "Pro",
+            "price": "$16",
+            "desc": "For teams that need scale and controls"
+        },
+        "enterprise": {
+            "name": "Enterprise",
+            "price": "Custom",
+            "desc": "For regulated and large organizations"
+        },
+        "cta": "Choose Plan"
+    },
+    "faq": {
+        "title": "Frequently asked questions",
+        "q1": "Is RindaNet legal to use?",
+        "a1": "RindaNet is designed for lawful privacy and secure access. Always follow local laws and regulations.",
+        "q2": "Will it slow down my internet?",
+        "a2": "RindaNet uses smart routing and optimized protocol selection to minimize speed impact.",
+        "q3": "Can I use one account on multiple devices?",
+        "a3": "Yes. Pro and Enterprise plans support multi-device usage with centralized management.",
+        "q4": "Do you keep user activity logs?",
+        "a4": "No. Our infrastructure is built around a strict no-logs approach."
+    },
+    "footer": {
+        "product": "Product",
+        "company": "Company",
+        "legal": "Legal",
+        "privacy": "Privacy Policy",
+        "terms": "Terms of Service",
+        "copyright": "All rights reserved."
+    },
+    "common": {
+        "connected": "Connected",
+        "connecting": "Connecting",
+        "disconnected": "Disconnected",
+        "backToTop": "Back to top",
+        "light": "Light",
+        "dark": "Dark",
+        "menu": "Menu",
+        "close": "Close"
+    }
+}

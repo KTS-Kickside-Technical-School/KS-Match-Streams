@@ -4,22 +4,26 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary: {
-          DEFAULT: '#2563EB',
-          light: '#60A5FA',
-          dark: '#1D4ED8',
-        },
-        secondary: {
-          DEFAULT: '#14B8A6',
-          light: '#5EEAD4',
-          dark: '#0F766E',
-        },
-        accent: '#F59E0B',
-        background: '#F8FAFC',
-        surface: '#FFFFFF',
-        text: '#0F172A',
-        muted: '#64748B',
-        border: '#E2E8F0',
+        bg: 'var(--color-bg)',
+        surface: 'var(--color-surface)',
+        text: 'var(--color-text)',
+        muted: 'var(--color-muted)',
+        border: 'var(--color-border)',
+        primary: 'var(--color-primary)',
+        'primary-strong': 'var(--color-primary-strong)',
+        accent: 'var(--color-accent)',
+        gold: 'var(--color-gold)',
+        'primary-foreground': 'var(--color-primary-foreground)',
+        'status-connected': 'var(--color-status-connected)',
+        'status-connecting': 'var(--color-status-connecting)',
+        'status-disconnected': 'var(--color-status-disconnected)',
+      },
+      boxShadow: {
+        soft: '0 16px 36px var(--shadow-soft)',
+      },
+      backgroundImage: {
+        'map-pattern':
+          'radial-gradient(circle at 1px 1px, color-mix(in oklab, var(--color-text) 16%, transparent) 1px, transparent 0)',
       },
     },
   },
