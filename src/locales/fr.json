@@ -1,0 +1,151 @@
+{
+    "brand": {
+        "name": "RindaNet",
+        "tagline": "Securise. Rapide. Sans frontieres."
+    },
+    "nav": {
+        "features": "Fonctionnalites",
+        "map": "Reseau",
+        "pricing": "Tarifs",
+        "faq": "FAQ",
+        "download": "Telecharger l'app",
+        "getStarted": "Commencer"
+    },
+    "hero": {
+        "headline": "Internet securise sans frontieres",
+        "subtext": "RindaNet fournit des connexions chiffrees ultra-rapides pour la confidentialite, la liberte et l'acces global.",
+        "download": "Telecharger l'app",
+        "getStarted": "Commencer",
+        "statusTitle": "Connexion en direct",
+        "status": "Connecte",
+        "server": "Shanghai vers Singapour",
+        "latency": "Latence",
+        "speed": "Vitesse",
+        "shield": "Tunnel AES-256 actif"
+    },
+    "trust": {
+        "title": "Adopte par des equipes axees confidentialite",
+        "items": {
+            "encryption": {
+                "title": "Chiffrement militaire",
+                "desc": "Chiffrement AES-256 et rotation de cles moderne pour chaque paquet."
+            },
+            "servers": {
+                "title": "Serveurs globaux rapides",
+                "desc": "Passerelles strategiques pour une faible latence mondiale."
+            },
+            "nologs": {
+                "title": "Politique zero log",
+                "desc": "Aucun suivi d'activite et architecture orientee confidentialite."
+            },
+            "performance": {
+                "title": "Debit optimise",
+                "desc": "Routage optimise pour des performances stables en pointe."
+            }
+        }
+    },
+    "features": {
+        "title": "Concu pour la vitesse, la securite et la liberte",
+        "items": {
+            "fast": "Connexions rapides",
+            "kill": "Kill switch",
+            "multi": "Multi-appareils",
+            "routing": "Routage intelligent",
+            "china": "Serveurs optimises Chine",
+            "streaming": "Support streaming"
+        }
+    },
+    "map": {
+        "title": "Tissu VPN mondial",
+        "desc": "Un reseau resilient a faible latence reliant la Chine et l'international.",
+        "online": "Noeuds en ligne",
+        "uptime": "Disponibilite"
+    },
+    "how": {
+        "title": "Comment ca marche",
+        "step1": {
+            "title": "Telecharger",
+            "desc": "Installez RindaNet en quelques secondes sur votre appareil."
+        },
+        "step2": {
+            "title": "Connecter",
+            "desc": "Choisissez l'emplacement le plus rapide ou manuellement."
+        },
+        "step3": {
+            "title": "Naviguer en securite",
+            "desc": "Votre trafic est chiffre et route via des passerelles fiables."
+        }
+    },
+    "platforms": {
+        "title": "Disponible sur toutes les grandes plateformes"
+    },
+    "testimonials": {
+        "title": "Avis clients",
+        "items": {
+            "one": {
+                "quote": "RindaNet a offert une connectivite transfrontaliere stable sans perte de vitesse.",
+                "name": "Lina Zhao",
+                "role": "CTO, Nova Commerce"
+            },
+            "two": {
+                "quote": "Le tableau de bord et les politiques ont simplifie notre deploiement entreprise.",
+                "name": "Marcus Rey",
+                "role": "Responsable Securite, Apex Studio"
+            },
+            "three": {
+                "quote": "Streaming fluide et latence plus faible que notre ancien fournisseur en APAC.",
+                "name": "Sophie Martin",
+                "role": "Directrice Ops, Flux Media"
+            }
+        }
+    },
+    "pricing": {
+        "title": "Tarification claire pour equipes modernes",
+        "monthly": "mois",
+        "starter": {
+            "name": "Starter",
+            "price": "$8",
+            "desc": "Pour les particuliers et independants"
+        },
+        "pro": {
+            "name": "Pro",
+            "price": "$16",
+            "desc": "Pour les equipes qui evoluent"
+        },
+        "enterprise": {
+            "name": "Enterprise",
+            "price": "Sur mesure",
+            "desc": "Pour les organisations reglementees"
+        },
+        "cta": "Choisir"
+    },
+    "faq": {
+        "title": "Questions frequentes",
+        "q1": "RindaNet est-il legal ?",
+        "a1": "RindaNet est concu pour un usage legal de confidentialite et securite. Respectez les lois locales.",
+        "q2": "Cela ralentit-il internet ?",
+        "a2": "Le routage intelligent et les protocoles optimises minimisent l'impact sur la vitesse.",
+        "q3": "Un compte pour plusieurs appareils ?",
+        "a3": "Oui. Les offres Pro et Enterprise prennent en charge plusieurs appareils.",
+        "q4": "Conservez-vous des logs d'activite ?",
+        "a4": "Non. Notre infrastructure suit une approche stricte zero log."
+    },
+    "footer": {
+        "product": "Produit",
+        "company": "Entreprise",
+        "legal": "Juridique",
+        "privacy": "Politique de confidentialite",
+        "terms": "Conditions d'utilisation",
+        "copyright": "Tous droits reserves."
+    },
+    "common": {
+        "connected": "Connecte",
+        "connecting": "Connexion",
+        "disconnected": "Deconnecte",
+        "backToTop": "Haut de page",
+        "light": "Clair",
+        "dark": "Sombre",
+        "menu": "Menu",
+        "close": "Fermer"
+    }
+}

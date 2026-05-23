@@ -1,0 +1,151 @@
+{
+    "brand": {
+        "name": "RindaNet",
+        "tagline": "安全、极速、无边界。"
+    },
+    "nav": {
+        "features": "功能",
+        "map": "网络",
+        "pricing": "定价",
+        "faq": "常见问题",
+        "download": "下载应用",
+        "getStarted": "立即开始"
+    },
+    "hero": {
+        "headline": "无边界安全上网",
+        "subtext": "RindaNet 提供超高速加密连接，为隐私保护、网络自由与全球访问而生。",
+        "download": "下载应用",
+        "getStarted": "立即开始",
+        "statusTitle": "实时连接状态",
+        "status": "已连接",
+        "server": "上海到新加坡",
+        "latency": "延迟",
+        "speed": "速度",
+        "shield": "AES-256 隧道已开启"
+    },
+    "trust": {
+        "title": "受到全球隐私优先团队信赖",
+        "items": {
+            "encryption": {
+                "title": "军工级加密",
+                "desc": "使用 AES-256 加密与现代密钥轮换机制，保护每一个数据包。"
+            },
+            "servers": {
+                "title": "全球高速节点",
+                "desc": "关键地区部署优质网关，显著降低跨区延迟。"
+            },
+            "nologs": {
+                "title": "严格无日志政策",
+                "desc": "不记录用户活动，基础设施以隐私优先原则构建。"
+            },
+            "performance": {
+                "title": "高性能传输",
+                "desc": "高峰时段依然保持稳定传输与可靠体验。"
+            }
+        }
+    },
+    "features": {
+        "title": "为速度、安全与自由而打造",
+        "items": {
+            "fast": "极速连接",
+            "kill": "网络断开保护",
+            "multi": "多设备支持",
+            "routing": "智能路由",
+            "china": "中国优化线路",
+            "streaming": "流媒体支持"
+        }
+    },
+    "map": {
+        "title": "全球 VPN 网络",
+        "desc": "低延迟高韧性网络，连接中国与全球主要区域。",
+        "online": "在线节点",
+        "uptime": "可用率"
+    },
+    "how": {
+        "title": "如何使用",
+        "step1": {
+            "title": "下载",
+            "desc": "几秒内在你的设备上安装 RindaNet。"
+        },
+        "step2": {
+            "title": "连接",
+            "desc": "选择智能最快节点，或手动指定地区。"
+        },
+        "step3": {
+            "title": "安全浏览",
+            "desc": "流量全程加密，并通过可信网关传输。"
+        }
+    },
+    "platforms": {
+        "title": "全面支持主流平台"
+    },
+    "testimonials": {
+        "title": "客户评价",
+        "items": {
+            "one": {
+                "quote": "RindaNet 帮助我们的分布式团队在跨境场景下保持稳定连接且速度出色。",
+                "name": "赵琳娜",
+                "role": "Nova Commerce 首席技术官"
+            },
+            "two": {
+                "quote": "管理面板与策略控制非常完善，企业部署高效且顺畅。",
+                "name": "Marcus Rey",
+                "role": "Apex Studio 安全负责人"
+            },
+            "three": {
+                "quote": "在亚太区域的延迟更低，流媒体体验明显优于此前方案。",
+                "name": "Sophie Martin",
+                "role": "Flux Media 运营总监"
+            }
+        }
+    },
+    "pricing": {
+        "title": "面向现代团队的简洁定价",
+        "monthly": "/月",
+        "starter": {
+            "name": "基础版",
+            "price": "$8",
+            "desc": "适合个人与独立从业者"
+        },
+        "pro": {
+            "name": "专业版",
+            "price": "$16",
+            "desc": "适合需要规模与策略控制的团队"
+        },
+        "enterprise": {
+            "name": "企业版",
+            "price": "定制",
+            "desc": "适合合规与大型组织"
+        },
+        "cta": "选择套餐"
+    },
+    "faq": {
+        "title": "常见问题",
+        "q1": "RindaNet 使用是否合法？",
+        "a1": "RindaNet 用于合法隐私保护与安全访问，请遵守当地法律法规。",
+        "q2": "会影响网速吗？",
+        "a2": "通过智能路由与协议优化，RindaNet 将速度损耗降到最低。",
+        "q3": "一个账号能多设备使用吗？",
+        "a3": "可以。专业版与企业版支持多设备并提供集中管理。",
+        "q4": "你们会记录用户活动吗？",
+        "a4": "不会。我们的基础设施严格遵循无日志原则。"
+    },
+    "footer": {
+        "product": "产品",
+        "company": "公司",
+        "legal": "法律",
+        "privacy": "隐私政策",
+        "terms": "服务条款",
+        "copyright": "保留所有权利。"
+    },
+    "common": {
+        "connected": "已连接",
+        "connecting": "连接中",
+        "disconnected": "未连接",
+        "backToTop": "返回顶部",
+        "light": "浅色",
+        "dark": "深色",
+        "menu": "菜单",
+        "close": "关闭"
+    }
+}
