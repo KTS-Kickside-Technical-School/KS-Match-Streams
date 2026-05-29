@@ -1,85 +1,67 @@
-import { AnimatePresence, motion } from 'framer-motion'
-import { useEffect, useState } from 'react'
-import { Footer } from './components/layout/Footer'
-import { Navbar } from './components/layout/Navbar'
-import { FAQSection } from './components/sections/FAQSection'
-import { FeaturesSection } from './components/sections/FeaturesSection'
-import { HeroSection } from './components/sections/HeroSection'
-import { HowItWorksSection } from './components/sections/HowItWorksSection'
-import { MapSection } from './components/sections/MapSection'
-import { PlatformSection } from './components/sections/PlatformSection'
-import { PricingSection } from './components/sections/PricingSection'
-import { TestimonialsSection } from './components/sections/TestimonialsSection'
-import { TrustSection } from './components/sections/TrustSection'
-import { useI18n } from './providers/I18nProvider'
+import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { apiService } from './services/api';
+import Navbar from './components/Navbar';
+import Footer from './components/Footer';
+import Home from './pages/Home';
+import Live from './pages/Live';
+import Watch from './pages/Watch';
 
-function App() {
-  const { t } = useI18n()
-  const [loading, setLoading] = useState(true)
-  const [showTopButton, setShowTopButton] = useState(false)
+const App: React.FC = () => {
+  const [searchValue, setSearchValue] = useState('');
+  const [liveCount, setLiveCount] = useState(0);
 
+  // Dynamic live count sync for Navbar active badge
   useEffect(() => {
-    const timer = window.setTimeout(() => setLoading(false), 800)
-    return () => window.clearTimeout(timer)
-  }, [])
+    const fetchLiveCount = async () => {
+      try {
+        const matches = await apiService.getLiveMatches();
+        setLiveCount(matches.length);
+      } catch (err) {
+        setLiveCount(0);
+      }
+    };
 
-  useEffect(() => {
-    const onScroll = () => setShowTopButton(window.scrollY > 420)
-    window.addEventListener('scroll', onScroll)
-    return () => window.removeEventListener('scroll', onScroll)
-  }, [])
+    fetchLiveCount();
+    const interval = setInterval(fetchLiveCount, 30000);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
-    <>
-      <AnimatePresence>
-        {loading ? (
-          <motion.div
-            key="loader"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[60] grid place-items-center bg-bg"
-          >
-            <div className="flex items-center gap-3 rounded-2xl border border-border bg-surface px-5 py-4">
-              <span className="h-3 w-3 animate-pulse rounded-full bg-primary" />
-              <p className="text-sm font-medium text-text">RindaNet</p>
-            </div>
-          </motion.div>
-        ) : null}
-      </AnimatePresence>
+    <Router>
+      <div className="flex flex-col min-h-screen bg-[#08090c] text-white">
+        
+        {/* Sticky Glass Navbar */}
+        <Navbar 
+          searchValue={searchValue} 
+          onSearchChange={setSearchValue} 
+          liveCount={liveCount} 
+        />
 
-      <motion.main initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.45 }}>
-        <Navbar />
-        <HeroSection />
-        <TrustSection />
-        <FeaturesSection />
-        <MapSection />
-        <HowItWorksSection />
-        <PlatformSection />
-        <TestimonialsSection />
-        <PricingSection />
-        <FAQSection />
+        {/* Content Routes wrapping */}
+        <div className="flex-grow">
+          <Routes>
+            <Route 
+              path="/" 
+              element={<Home searchValue={searchValue} />} 
+            />
+            <Route 
+              path="/live" 
+              element={<Live searchValue={searchValue} />} 
+            />
+            <Route 
+              path="/watch/:id" 
+              element={<Watch />} 
+            />
+          </Routes>
+        </div>
+
+        {/* Sleek Dark Footer */}
         <Footer />
-      </motion.main>
+        
+      </div>
+    </Router>
+  );
+};
 
-      <AnimatePresence>
-        {showTopButton ? (
-          <motion.button
-            key="back-top"
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 16 }}
-            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-            type="button"
-            className="fixed bottom-6 right-6 z-50 rounded-full bg-primary px-4 py-3 text-xs font-semibold text-primary-foreground shadow-soft transition hover:bg-primary-strong"
-            aria-label={t('common.backToTop')}
-          >
-            {t('common.backToTop')}
-          </motion.button>
-        ) : null}
-      </AnimatePresence>
-    </>
-  )
-}
-
-export default App
+export default App;
