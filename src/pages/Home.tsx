@@ -1,211 +1,85 @@
-import React, { useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
-import { apiService } from '../services/api';
+import React from 'react';
+import { useHomeMatches, isSameDay } from '../hooks/useHomeMatches';
 import Hero from '../components/Hero';
 import MatchCard from '../components/MatchCard';
-import CategoryBar from '../components/CategoryBar';
-import type { Match } from '../types/index';
 import {
-  Tv, Calendar, RefreshCw, AlertTriangle, Trophy,
-  Star, ShieldCheck, Flame
+  Trophy, Star, Tv, RefreshCw,
+  AlertTriangle, ChevronLeft, ChevronRight, Calendar as CalendarDays
 } from 'lucide-react';
+import CategoryBar from '../components/CategoryBar';
+
+const PROMO_ITEMS = [
+  {
+    icon: '🏆',
+    title: 'FIFA World Cup 2026',
+    desc: 'USA vs Italy - June 12. Exclusive HD live stream on Kickside!',
+    badge: 'Promo'
+  },
+  {
+    icon: '⚽',
+    title: 'UEFA Champions League Final',
+    desc: 'Watch Europe\'s top clubs battle for glory live and lag-free.',
+    badge: 'Live Stream'
+  },
+  {
+    icon: '📣',
+    title: 'Advertise With Us',
+    desc: 'Reach millions of passionate sports fans daily. Contact: sponsors@kickside.com',
+    badge: 'Sponsor'
+  },
+  {
+    icon: '🏆',
+    title: 'FIFA World Cup 2026',
+    desc: 'Mexico vs South Africa - Estadio Azteca Opening Match June 11.',
+    badge: 'Countdown'
+  },
+  {
+    icon: '🥊',
+    title: 'UFC PPV Showdown',
+    desc: 'Catch every main event clash live on Kickside. HD feeds ready.',
+    badge: 'Fights'
+  },
+  {
+    icon: '🏆',
+    title: 'FIFA World Cup 2026',
+    desc: 'Argentina vs France - The Ultimate Re-match June 14. Set reminder!',
+    badge: 'Blockbuster'
+  }
+];
 
 interface HomeProps {
   searchValue: string;
 }
 
-// Preset Leagues list on the Left Sidebar (World Cup on top - Requirement 1)
-const TOP_LEAGUES = [
-  { id: 'all-leagues', name: 'All Leagues', icon: '🏆' },
-  { id: 'world-cup', name: 'World Cup', icon: '🌎' },
-  { id: 'premier-league', name: 'Premier League', icon: '🏴\u200D󠁢󠁥󠁮󠁧󠁿' },
-  { id: 'la-liga', name: 'La Liga', icon: '🇪🇸' },
-  { id: 'bundesliga', name: 'Bundesliga', icon: '🇩🇪' },
-  { id: 'serie-a', name: 'Serie A', icon: '🇮🇹' },
-  { id: 'champions-league', name: 'UEFA Champions League', icon: '🇪🇺' },
-  { id: 'nba', name: 'NBA', icon: '🏀' },
-  { id: 'ufc', name: 'UFC / MMA', icon: '🥊' },
-];
-
 const Home: React.FC<HomeProps> = ({ searchValue }) => {
-  const [matches, setMatches] = useState<Match[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  // React Router URL Sync
-  const [searchParams, setSearchParams] = useSearchParams();
-
-  // Read URL values (defaults to all)
-  const categoryParam = searchParams.get('category') || 'all';
-  const leagueParam = searchParams.get('league') || 'all-leagues';
-  const statusParam = searchParams.get('status') || 'all'; // 'all' or 'live'
-
-  const fetchMatches = async () => {
-    setIsLoading(true);
-    setError(null);
-    try {
-      const data = await apiService.getAllMatches();
-      setMatches(data);
-    } catch (err: any) {
-      setError('Unable to synchronize live sports streams. Please check your network and try again.');
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchMatches();
-    // Poll API for score updates every 30 seconds
-    const interval = setInterval(fetchMatches, 30000);
-    return () => clearInterval(interval);
-  }, []);
-
-  // Dynamic SEO Page Meta updates (Requirement 7)
-  useEffect(() => {
-    const activeSearch = searchParams.get('search');
-    if (activeSearch) {
-      document.title = `Search results for "${activeSearch}" - Kickside Match Center`;
-    } else if (categoryParam !== 'all') {
-      document.title = `${categoryParam.toUpperCase()} Live Streams & Schedules - Kickside`;
-    } else if (leagueParam !== 'all-leagues') {
-      const activeLeague = TOP_LEAGUES.find(l => l.id === leagueParam);
-      const name = activeLeague ? activeLeague.name : leagueParam;
-      document.title = `${name} Streams & Scores - Kickside`;
-    } else {
-      document.title = 'Kickside | Live Sports Stream & Match Center';
-    }
-
-    const metaDesc = document.querySelector('meta[name="description"]');
-    if (metaDesc) {
-      metaDesc.setAttribute('content', 'Watch live sports match streams, check upcoming fixtures, and follow real-time scores on Kickside Match Center. Ad-prepared and lag-free streaming.');
-    }
-  }, [categoryParam, leagueParam, searchParams]);
-
-  // Update URL parameters helper
-  const updateUrlParams = (key: string, value: string) => {
-    const nextParams = new URLSearchParams(searchParams);
-    if (value === 'all' || value === 'all-leagues') {
-      nextParams.delete(key);
-    } else {
-      nextParams.set(key, value);
-    }
-
-    // Mutual exclusivity filters
-    if (key === 'league') {
-      nextParams.delete('category'); // clear sport when picking a league
-    } else if (key === 'category') {
-      nextParams.delete('league'); // clear league when picking a sport
-    }
-
-    setSearchParams(nextParams);
-  };
-
-  // Toggling status parameter
-  const toggleLiveStatus = () => {
-    const nextParams = new URLSearchParams(searchParams);
-    if (statusParam === 'live') {
-      nextParams.delete('status');
-    } else {
-      nextParams.set('status', 'live');
-    }
-    setSearchParams(nextParams);
-  };
-
-  // Sync prop-based search value into URL search parameter
-  useEffect(() => {
-    const nextParams = new URLSearchParams(searchParams);
-    if (searchValue.trim()) {
-      nextParams.set('search', searchValue.trim());
-    } else {
-      nextParams.delete('search');
-    }
-    setSearchParams(nextParams);
-  }, [searchValue]);
-
-  // Extract dynamic leagues present in current loaded matches (Requirement 6)
-  const allLeaguesInMatches = [...new Set(matches.map(m => m.league))].filter(Boolean);
-  const hardcodedLeagueNames = TOP_LEAGUES.map(l => l.name.toLowerCase());
-  const dynamicLeagues = allLeaguesInMatches.filter(league =>
-    !hardcodedLeagueNames.includes(league.toLowerCase())
-  );
-
-  const leagueCounts = matches.reduce((acc, m) => {
-    acc[m.league] = (acc[m.league] || 0) + 1;
-    return acc;
-  }, {} as Record<string, number>);
-
-  const sortedDynamicLeagues = dynamicLeagues.sort((a, b) =>
-    (leagueCounts[b] || 0) - (leagueCounts[a] || 0)
-  );
-
-  // Filtering Logic
-  const filteredMatches = matches.filter(match => {
-    // 1. Category filter
-    const matchesCategory = categoryParam === 'all' || match.category === categoryParam;
-
-    // 2. League filter
-    let matchesLeague = true;
-    if (leagueParam !== 'all-leagues') {
-      const activeLeague = TOP_LEAGUES.find(l => l.id === leagueParam);
-      const targetLeagueName = activeLeague ? activeLeague.name : leagueParam;
-      matchesLeague = match.league.toLowerCase() === targetLeagueName.toLowerCase();
-    }
-
-    // 3. Live status filter
-    const matchesStatus = statusParam === 'all' || match.status === 'live';
-
-    // 4. Input Search filter
-    const activeSearch = (searchParams.get('search') || '').toLowerCase().trim();
-    const title = String(match.title || '').toLowerCase();
-    const league = String(match.league || '').toLowerCase();
-    const category = String(match.category || '').toLowerCase();
-    const homeName = String(match.homeTeam?.name || '').toLowerCase();
-    const awayName = String(match.awayTeam?.name || '').toLowerCase();
-
-    const matchesSearch = activeSearch === '' ||
-      title.includes(activeSearch) ||
-      league.includes(activeSearch) ||
-      category.includes(activeSearch) ||
-      homeName.includes(activeSearch) ||
-      awayName.includes(activeSearch);
-
-    return matchesCategory && matchesLeague && matchesStatus && matchesSearch;
-  });
-
-  const liveMatches = filteredMatches.filter(m => m.status === 'live');
-  const upcomingMatches = filteredMatches.filter(m => m.status === 'upcoming');
-
-  // Group matches by tournament/league (Requirement 2)
-  const groupedMatches = filteredMatches.reduce((acc, match) => {
-    const league = match.league || 'Other Tournaments';
-    if (!acc[league]) {
-      acc[league] = [];
-    }
-    acc[league].push(match);
-    return acc;
-  }, {} as Record<string, Match[]>);
-
-  // Order grouped leagues: hardcoded first, then dynamic alphabetically
-  const orderedLeagueNames = Object.keys(groupedMatches).sort((a, b) => {
-    const aIndex = TOP_LEAGUES.findIndex(l => l.name.toLowerCase() === a.toLowerCase());
-    const bIndex = TOP_LEAGUES.findIndex(l => l.name.toLowerCase() === b.toLowerCase());
-    if (aIndex !== -1 && bIndex !== -1) return aIndex - bIndex;
-    if (aIndex !== -1) return -1;
-    if (bIndex !== -1) return 1;
-    return a.localeCompare(b);
-  });
-
-  // Featured Highlight Hero
-  const featuredMatch = matches.find(m => m.status === 'live' && m.category === 'football') ||
-    matches.find(m => m.status === 'live') ||
-    matches[0];
-
-  const totalLiveCount = matches.filter(m => m.status === 'live').length;
+  const {
+    isLoading,
+    matches,
+    error,
+    selectedDate,
+    setSelectedDate,
+    shiftDate,
+    categoryParam,
+    leagueParam,
+    updateUrlParams,
+    toggleLiveStatus,
+    sortedDynamicLeagues,
+    leagueCounts,
+    liveMatches,
+    upcomingMatches,
+    groupedMatches,
+    orderedLeagueNames,
+    featuredMatch,
+    totalLiveCount,
+    fetchMatches,
+    TOP_LEAGUES,
+    statusParam,
+    searchParams,
+  } = useHomeMatches(searchValue);
 
   return (
     <div className="flex flex-col min-h-screen">
 
-      {/* Scrollable Categories Bar placed below Navbar (Requirement 9) */}
       <CategoryBar
         activeCategory={categoryParam}
         onSelectCategory={(id) => updateUrlParams('category', id)}
@@ -220,7 +94,25 @@ const Home: React.FC<HomeProps> = ({ searchValue }) => {
           {/* =======================================================
               COLUMN 1: SIDEBAR - Controls & Leagues List (3-Cols)
               ======================================================= */}
-          <aside className="lg:col-span-3 bg-[#11141e] border border-white/[0.05] rounded-xl p-3 shadow-md flex flex-col gap-3 lg:sticky lg:top-[144px]">
+          <aside className="lg:col-span-3 bg-[#11141e] border border-white/[0.05] rounded-xl p-3 shadow-md flex flex-col gap-2.5">
+
+            {/* Glowing Live Streams trigger toggle */}
+            <button
+              onClick={toggleLiveStatus}
+              className={`w-full py-3 px-4 rounded-xl flex items-center justify-between transition-all duration-300 relative overflow-hidden group border ${statusParam === 'live'
+                ? 'bg-red-500 border-red-500 text-white font-extrabold shadow-lg shadow-red-500/20'
+                : 'bg-red-500/5 hover:bg-red-500/10 border-red-500/20 text-red-500 hover:text-red-400 font-extrabold'
+                }`}
+            >
+              <div className="absolute inset-0 bg-gradient-to-r from-red-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
+              <div className="flex items-center gap-2">
+                <span className={`w-2 h-2 bg-current rounded-full shrink-0 ${statusParam === 'live' ? 'animate-ping' : 'animate-pulse'}`} />
+                <span className="text-xs uppercase tracking-wider">🔴 Live Now Only</span>
+              </div>
+              <span className={`text-[10px] font-black px-2 py-0.5 rounded ${statusParam === 'live' ? 'bg-[#08090c] text-red-500' : 'bg-red-500/10 text-red-500'}`}>
+                {totalLiveCount} Active
+              </span>
+            </button>
 
             <div className="flex items-center gap-2 px-1 pb-2 border-b border-white/[0.04] mt-1">
               <Trophy size={14} className="text-primary" />
@@ -261,12 +153,12 @@ const Home: React.FC<HomeProps> = ({ searchValue }) => {
               ))}
             </div>
 
-            {/* Dynamic Other Leagues bottom listing (Requirement 6) */}
+            {/* Dynamic Other Leagues bottom listing */}
             {sortedDynamicLeagues.length > 0 && (
               <>
                 <div className="flex items-center gap-2 px-1 pb-1 pt-2 border-t border-white/[0.04] mt-1">
                   <Star size={12} className="text-slate-400" />
-                  <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Other Active Leagues</h3>
+                  <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Other Leagues</h3>
                 </div>
 
                 {/* Desktop dynamic list */}
@@ -321,11 +213,7 @@ const Home: React.FC<HomeProps> = ({ searchValue }) => {
               <a href="mailto:sponsors@kickside.com" className="text-[8px] font-bold text-primary hover:underline mt-1">sponsors@kickside.com</a>
             </div>
 
-            {/* Sidebar Security Label */}
-            <div className="hidden lg:flex items-center gap-2 bg-slate-900/60 border border-white/[0.04] p-3 rounded-lg text-center justify-center mt-2">
-              <ShieldCheck size={14} className="text-primary" />
-              <span className="text-[9px] font-bold text-slate-500 uppercase tracking-wider">CORS Secure API Gateway</span>
-            </div>
+
 
           </aside>
 
@@ -334,13 +222,127 @@ const Home: React.FC<HomeProps> = ({ searchValue }) => {
               ======================================================= */}
           <section className="lg:col-span-9 flex flex-col gap-4 w-full">
 
-            {/* Header Billboard Advertisement slot (728x90 layout format) */}
-            <div className="border border-white/[0.04] bg-[#11141e]/40 p-2.5 rounded-xl flex items-center justify-center gap-2 select-none relative overflow-hidden h-[54px] w-full">
-              <div className="absolute top-1 left-3 text-[7px] font-black tracking-wider text-slate-600 uppercase">Sponsored Banner</div>
-              <div className="w-full h-full rounded border border-dashed border-white/[0.08] flex items-center justify-center bg-black/10 gap-1.5">
-                <span className="text-slate-500 text-[10px] font-bold">Premium Sponsor Banner Slot</span>
-                <span className="text-slate-600 text-[9px] bg-white/[0.02] px-1 py-0.2 rounded border border-white/[0.05]">728x90 Leaderboard Placeholder</span>
+            {/* Premium Scrolling Sponsor Marquee Advertisement slot */}
+            <div className="border border-white/[0.04] bg-[#11141e]/45 hover:bg-[#11141e]/60 p-2 rounded-xl flex items-center select-none relative overflow-hidden h-[54px] w-full gap-3 transition-colors">
+              {/* Static Promo Label on the Left */}
+              <div className="flex items-center gap-1.5 shrink-0 bg-primary/10 text-primary border border-primary/10 px-2.5 py-1 rounded-md z-10 backdrop-blur-sm">
+                <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
+                <span className="text-[9px] font-black tracking-wider uppercase">Promoted</span>
               </div>
+              
+              {/* Scrolling Marquee Container */}
+              <div className="relative w-full overflow-hidden h-full flex items-center">
+                {/* Left/Right fading edge overlays for premium visual depth */}
+                <div className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-[#0d0e12] to-transparent z-10 pointer-events-none" />
+                <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-[#0d0e12] to-transparent z-10 pointer-events-none" />
+                
+                {/* Marquee Track */}
+                <div className="animate-marquee flex items-center gap-8 py-1">
+                  {PROMO_ITEMS.map((item, idx) => (
+                    <div key={`m1-${idx}`} className="flex items-center gap-2 text-xs font-bold text-slate-300 hover:text-white transition-colors cursor-pointer whitespace-nowrap">
+                      <span className="text-primary text-sm leading-none shrink-0">{item.icon}</span>
+                      <span className="text-white font-extrabold">{item.title}</span>
+                      <span className="text-slate-500 font-medium">|</span>
+                      <span className="text-slate-400 font-bold">{item.desc}</span>
+                      {item.badge && (
+                        <span className="ml-1 bg-red-500/10 text-red-400 border border-red-500/10 text-[8px] font-black px-1.5 py-0.2 rounded uppercase tracking-wider scale-90">
+                          {item.badge}
+                        </span>
+                      )}
+                    </div>
+                  ))}
+                  {/* Duplicate track for seamless infinite loop */}
+                  {PROMO_ITEMS.map((item, idx) => (
+                    <div key={`m2-${idx}`} className="flex items-center gap-2 text-xs font-bold text-slate-300 hover:text-white transition-colors cursor-pointer whitespace-nowrap">
+                      <span className="text-primary text-sm leading-none shrink-0">{item.icon}</span>
+                      <span className="text-white font-extrabold">{item.title}</span>
+                      <span className="text-slate-500 font-medium">|</span>
+                      <span className="text-slate-400 font-bold">{item.desc}</span>
+                      {item.badge && (
+                        <span className="ml-1 bg-red-500/10 text-red-400 border border-red-500/10 text-[8px] font-black px-1.5 py-0.2 rounded uppercase tracking-wider scale-90">
+                          {item.badge}
+                        </span>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* =======================================================
+                HORIZONTAL DATE / CALENDAR SELECTOR (Requirement 1)
+                ======================================================= */}
+            <div className="bg-[#11141e] border border-white/[0.05] p-1.5 md:p-2 rounded-xl flex items-center justify-between shadow-sm select-none gap-2">
+
+              {/* Yesterday Shift Button */}
+              <button
+                onClick={() => shiftDate(-1)}
+                className="p-1.5 rounded-lg bg-white/[0.02] hover:bg-white/[0.08] text-slate-400 hover:text-white transition-colors active:scale-95 shrink-0 border border-white/[0.04]"
+                aria-label="Previous day"
+              >
+                <ChevronLeft size={16} />
+              </button>
+
+              {/* 5-Days Centered Date List centered around selectedDate */}
+              <div className="flex items-center gap-1 md:gap-2 overflow-x-auto scrollbar-none flex-grow justify-around py-0.5">
+                {[-2, -1, 0, 1, 2].map((offset) => {
+                  const dayDate = new Date(selectedDate);
+                  dayDate.setDate(dayDate.getDate() + offset);
+
+                  const isSelected = isSameDay(dayDate, selectedDate);
+                  const isTodayDate = isSameDay(dayDate, new Date());
+
+                  const dayName = dayDate.toLocaleDateString([], { weekday: 'short' });
+                  const dayNum = dayDate.getDate();
+                  const monthName = dayDate.toLocaleDateString([], { month: 'short' });
+
+                  return (
+                    <button
+                      key={offset}
+                      onClick={() => setSelectedDate(dayDate)}
+                      className={`flex flex-col items-center justify-center py-0.5 md:py-1 px-1.5 md:px-2.5 rounded-lg min-w-[42px] md:min-w-[54px] transition-all duration-300 relative border ${isSelected
+                        ? 'bg-primary text-[#08090c] border-primary font-black shadow-md shadow-primary/10 scale-102'
+                        : 'bg-white/[0.01] hover:bg-white/[0.04] text-slate-400 hover:text-white border-white/[0.03]'
+                        }`}
+                    >
+                      <span className={`text-[7px] uppercase tracking-wider font-extrabold ${isSelected ? 'text-[#08090c]/70' : 'text-slate-500'}`}>
+                        {isTodayDate ? 'Today' : dayName}
+                      </span>
+                      <span className="text-[10px] md:text-xs font-black mt-0.5 leading-none">{dayNum}</span>
+                      <span className={`text-[7px] font-bold mt-0.5 ${isSelected ? 'text-[#08090c]/80' : 'text-slate-500'}`}>
+                        {monthName}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* Tomorrow Shift Button */}
+              <button
+                onClick={() => shiftDate(1)}
+                className="p-1.5 rounded-lg bg-white/[0.02] hover:bg-white/[0.08] text-slate-400 hover:text-white transition-colors active:scale-95 shrink-0 border border-white/[0.04]"
+                aria-label="Next day"
+              >
+                <ChevronRight size={16} />
+              </button>
+
+              {/* Datepicker Icon Input Trigger */}
+              <div className="relative shrink-0 border-l border-white/[0.08] pl-2 flex items-center">
+                <label className="p-2 rounded-lg bg-white/[0.02] hover:bg-white/[0.08] text-slate-400 hover:text-white cursor-pointer transition-colors flex items-center justify-center border border-white/[0.04] relative">
+                  <CalendarDays size={16} className="text-primary" />
+                  <input
+                    type="date"
+                    value={selectedDate.toISOString().split('T')[0]}
+                    onChange={(e) => {
+                      if (e.target.value) {
+                        setSelectedDate(new Date(e.target.value));
+                      }
+                    }}
+                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                  />
+                </label>
+              </div>
+
             </div>
 
             {/* Sync Header row */}
@@ -420,7 +422,7 @@ const Home: React.FC<HomeProps> = ({ searchValue }) => {
                   </div>
                 </div>
 
-                {filteredMatches.length > 0 ? (
+                {groupedMatches && Object.keys(groupedMatches).length > 0 ? (
                   orderedLeagueNames.map(league => {
                     const leagueMatches = groupedMatches[league];
                     if (!leagueMatches || leagueMatches.length === 0) return null;
@@ -461,7 +463,7 @@ const Home: React.FC<HomeProps> = ({ searchValue }) => {
                     <Tv size={36} className="text-slate-600 mb-2" />
                     <h4 className="text-xs font-extrabold text-white uppercase">Schedules Empty</h4>
                     <p className="text-[10px] text-slate-500 mt-1 max-w-[320px] leading-relaxed">
-                      There are currently no active or scheduled matches broadcasting under the selected filters.
+                      There are currently no active or scheduled matches broadcasting under the selected date and filters.
                     </p>
                   </div>
                 )}
