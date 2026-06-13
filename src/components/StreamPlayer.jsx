@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Play, Pause, Volume2, VolumeX, Maximize, ShieldAlert, Tv, Eye, Sparkles, Settings } from 'lucide-react';
+import { Maximize, ShieldAlert, Tv, Eye } from 'lucide-react';
 
 const extractIframeSrc = (raw) => {
   if (typeof raw !== 'string') return '';
@@ -23,59 +23,15 @@ const resolveStreamSource = (raw) => {
 };
 
 const StreamPlayer = ({ match }) => {
-  const [isPlaying, setIsPlaying] = useState(true);
-  const [isMuted, setIsMuted] = useState(false);
-  const [isHovered, setIsHovered] = useState(false);
-  const [resolution, setResolution] = useState('1080p HD');
-  const [showSettings, setShowSettings] = useState(false);
   const [streamError, setStreamError] = useState(false);
-  
-  const videoRef = useRef(null);
   const playerContainerRef = useRef(null);
-
-  const getIframeSrcWithMute = (src, muted) => {
-    if (!muted || !src) return src;
-    try {
-      const url = new URL(src, window.location.origin);
-      if (url.searchParams.has('mute')) {
-        url.searchParams.set('mute', '1');
-      } else if (url.searchParams.has('muted')) {
-        url.searchParams.set('muted', '1');
-      } else {
-        url.searchParams.set('muted', '1');
-      }
-      return url.toString();
-    } catch {
-      return src;
-    }
-  };
 
   if (!match) return null;
 
   const isLive = match.status === 'live';
   const streamSource = resolveStreamSource(match.streamUrl);
-  const isIframeStream = streamSource.type === 'iframe';
   const hasStream = streamSource.type !== 'none' && !!streamSource.src;
-  const iframeSrc = isIframeStream ? getIframeSrcWithMute(streamSource.src, isMuted) : streamSource.src;
-
-  // Manage direct HTML5 video element controls
-  const handlePlayPause = () => {
-    if (videoRef.current) {
-      if (isPlaying) {
-        videoRef.current.pause();
-      } else {
-        videoRef.current.play().catch(() => {});
-      }
-      setIsPlaying(!isPlaying);
-    }
-  };
-
-  const handleMuteUnmute = () => {
-    if (!isIframeStream && videoRef.current) {
-      videoRef.current.muted = !isMuted;
-    }
-    setIsMuted(!isMuted);
-  };
+  const streamSrc = streamSource.src;
 
   const handleFullscreen = () => {
     if (playerContainerRef.current) {
@@ -87,26 +43,15 @@ const StreamPlayer = ({ match }) => {
     }
   };
 
-  const handleQualityChange = (quality) => {
-    setResolution(quality);
-    setShowSettings(false);
-  };
-
   // Reset error when match changes
   useEffect(() => {
     setStreamError(false);
-    setIsPlaying(true);
   }, [match.id]);
 
   return (
     <div 
       ref={playerContainerRef}
       style={styles.playerContainer}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => {
-        setIsHovered(false);
-        setShowSettings(false);
-      }}
     >
       {/* If the match is upcoming, show pre-match screen */}
       {!isLive ? (
@@ -141,10 +86,10 @@ const StreamPlayer = ({ match }) => {
           ) : (
             /* SportsRC stream source renderer */
             <div style={{ width: '100%', height: '100%', background: '#000000' }}>
-              {isIframeStream ? (
+              {streamSource.type === 'iframe' ? (
                 <iframe
                   title={match.title || 'Live Stream'}
-                  src={iframeSrc}
+                  src={streamSrc}
                   allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
                   allowFullScreen
                   onError={() => setStreamError(true)}
@@ -152,92 +97,14 @@ const StreamPlayer = ({ match }) => {
                 />
               ) : (
                 <video
-                  ref={videoRef}
-                  src={streamSource.src}
+                  src={streamSrc}
+                  controls
                   autoPlay
                   playsInline
-                  muted={isMuted}
                   loop
                   onError={() => setStreamError(true)}
                   style={styles.videoElement}
                 />
-              )}
-
-              {isHovered && (
-                <>
-                  <div style={styles.topControls}>
-                    <div className="badge-live" style={styles.topLiveBadge}>
-                      Live Stream
-                    </div>
-                    <div style={styles.streamTitle}>
-                      {match.title}
-                    </div>
-                    <div style={styles.streamStats}>
-                      <Eye size={14} />
-                      <span>{match.views ? `${match.views} viewing` : 'Live'}</span>
-                    </div>
-                  </div>
-
-                  <div style={styles.bottomControls}>
-                    <div style={styles.progressBarWrapper}>
-                      <div style={styles.progressBarBg}>
-                        <div style={styles.progressBarLiveFill}></div>
-                      </div>
-                    </div>
-
-                    <div style={styles.controlButtonsRow}>
-                      <div style={styles.leftControlsGroup}>
-                        {!isIframeStream ? (
-                          <>
-                            <button onClick={handlePlayPause} style={styles.controlBtn} aria-label={isPlaying ? "Pause" : "Play"}>
-                              {isPlaying ? <Pause size={18} fill="currentColor" /> : <Play size={18} fill="currentColor" />}
-                            </button>
-
-                            <button onClick={handleMuteUnmute} style={styles.controlBtn} aria-label={isMuted ? "Unmute" : "Mute"}>
-                              {isMuted ? <VolumeX size={18} /> : <Volume2 size={18} />}
-                            </button>
-                          </>
-                        ) : (
-                          <button onClick={handleMuteUnmute} style={styles.controlBtn} aria-label={isMuted ? "Unmute" : "Mute"}>
-                            {isMuted ? <VolumeX size={18} /> : <Volume2 size={18} />}
-                          </button>
-                        )}
-
-                        <div style={styles.liveClockBadge}>
-                          <div style={styles.pulseDot}></div>
-                          <span>LIVE</span>
-                        </div>
-                      </div>
-
-                      <div style={styles.rightControlsGroup}>
-                        {!isIframeStream && (
-                          <div style={{ position: 'relative' }}>
-                            <button
-                              onClick={() => setShowSettings(!showSettings)}
-                              style={{ ...styles.controlBtn, gap: '4px', fontSize: '0.78rem' }}
-                            >
-                              <Settings size={18} />
-                              <span>{resolution}</span>
-                            </button>
-
-                            {showSettings && (
-                              <div style={styles.settingsDropdown}>
-                                <div style={styles.settingsTitle}>Select Stream Quality</div>
-                                <button onClick={() => handleQualityChange('1080p HD')} style={{...styles.settingsOption, ...(resolution === '1080p HD' ? styles.settingsOptionActive : {})}}>1080p HD (60fps)</button>
-                                <button onClick={() => handleQualityChange('720p')} style={{...styles.settingsOption, ...(resolution === '720p' ? styles.settingsOptionActive : {})}}>720p (60fps)</button>
-                                <button onClick={() => handleQualityChange('480p')} style={{...styles.settingsOption, ...(resolution === '480p' ? styles.settingsOptionActive : {})}}>480p (Auto)</button>
-                              </div>
-                            )}
-                          </div>
-                        )}
-
-                        <button onClick={handleFullscreen} style={styles.controlBtn} aria-label="Fullscreen">
-                          <Maximize size={18} />
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </>
               )}
             </div>
           )}
